@@ -10,7 +10,7 @@ module.exports = function(grunt) {
     var checkTestStatus = function(wpt, testId, options, done){
         wpt.getTestStatus(testId, function(err, data) {
 
-            if (err){
+            if (err) {
                 return done(err);
             }
 
@@ -31,6 +31,8 @@ module.exports = function(grunt) {
 
                     var message = format('WPT results: <a href="{0}">{0}</a><br />Page under test: {1}<br /> Load Time: {2} <br />TTFB: {3}',data.data.summary, options.testUrl, data.data.median.firstView.loadTime, data.data.median.firstView.TTFB);
                     grunt.verbose.writeln(message);
+
+                    delete data.data.runs;
 
                     async.series([
                         function(callback) {
@@ -67,7 +69,6 @@ module.exports = function(grunt) {
     };
 
     var notifyHipchat = function(message, options, done) {
-
         var hipchatClient = new hipchat(options.hipchatApiKey);
 
         var params = {
@@ -83,11 +84,9 @@ module.exports = function(grunt) {
             }
             done();
         });
-
     };
 
     var notifyLogstash = function(data, options, done) {
-
         var logger = logstashRedis.createLogger(options.logstashHost, options.logstashPort, 'logstash');
 
         logger.log({
@@ -102,11 +101,9 @@ module.exports = function(grunt) {
         function(err, data) {
             logger.close(done);
         });
-
     };
 
     var notifyStatsd = function(data, options, done) {
-
         var client = new statsd({
             host: options.statsdHost,
             port: options.statsdPort,
@@ -120,11 +117,9 @@ module.exports = function(grunt) {
            client.close();
            done();
        });
-
     };
 
-    var makeRequest = function(task, done){
-
+    var makeRequest = function(task, done) {
         var options = task.options({
             instanceUrl: 'www.webpagetest.org',
             wptApiKey: null,
@@ -148,7 +143,7 @@ module.exports = function(grunt) {
             location: options.location
         };
 
-        if (options.hipchatApiKey === undefined || options.wptApiKey === undefined){
+        if (options.hipchatApiKey === undefined || options.wptApiKey === undefined) {
             grunt.fail.fatal('Please provide both hipchatapikey and wptapikey as command line paramters');
         }
 
@@ -163,7 +158,7 @@ module.exports = function(grunt) {
         });
     };
 
-    grunt.registerMultiTask('ot-webpagetest', function(){
+    grunt.registerMultiTask('ot-webpagetest', function() {
         var done = this.async();
         makeRequest(this, done);
     });

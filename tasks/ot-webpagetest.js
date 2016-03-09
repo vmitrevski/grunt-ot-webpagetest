@@ -111,7 +111,10 @@ module.exports = function(grunt) {
        });
 
        async.series([
-           //TBC
+           function(callback) {
+               client.gauge('fv.speedindex', data.data.average.firstView.SpeedIndex);
+               client.gauge('rv.speedindex', data.data.average.repeatView.SpeedIndex, callback);
+           }
        ],
        function(err, data) {
            client.close();

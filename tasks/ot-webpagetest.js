@@ -130,7 +130,7 @@ module.exports = function(grunt) {
             logstashHost: 'localhost',
             logstashPort: null,
             statsdHost: 'localhost',
-            statsdPort: 8125,
+            statsdPort: null,
             statsdPrefix: '',
             notifyHipchat: false,
             notifyLogstash: false,

@@ -110,6 +110,10 @@ module.exports = function(grunt) {
             prefix: options.statsdPrefix
        });
 
+       client.socket.on('close', function(err) {
+            done();
+       });
+
        async.series([
            function(callback) {
                client.gauge('fv.speedindex', data.data.average.firstView.SpeedIndex, callback);
@@ -120,7 +124,6 @@ module.exports = function(grunt) {
        ],
        function(err, data) {
            client.close();
-           done();
        });
     };
 

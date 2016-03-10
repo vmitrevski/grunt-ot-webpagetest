@@ -112,7 +112,9 @@ module.exports = function(grunt) {
 
        async.series([
            function(callback) {
-               client.gauge('fv.speedindex', data.data.average.firstView.SpeedIndex);
+               client.gauge('fv.speedindex', data.data.average.firstView.SpeedIndex, callback);
+           },
+           function(callback) {
                client.gauge('rv.speedindex', data.data.average.repeatView.SpeedIndex, callback);
            }
        ],
